@@ -1,10 +1,11 @@
-//Brenda Cristina Dourado Moura
-//Engenharia de Software
-//Turma 2
-//Mat�ria: Sistemas Operacionais
+//Autora: Brenda Cristina Dourado Moura
+//Gradução: Engenharia de Software
+//Turma: 2
+//Matéria: Sistemas Operacionais
 
 #include<stdio.h>
 #include<stdlib.h>
+#include<string.h>
 
 int politicaExclusao = -1;
 //-1 - Nenhuma politica de exclusao escolhida
@@ -12,7 +13,7 @@ int politicaExclusao = -1;
 //1 - Quando processos que tem filhos sao excluidos, toda a subarvore a partir do ponto de exclusao deve ser excluida
 //2 - Quando processos que tem filhos sao excluidos, os filhos devem ser ligados ao vertice superior - avo
 int processoInicial = -1;
-//Essa variavel verifica se o usuario j� criou o processo inicial
+//Essa variavel verifica se o usuario já criou o processo inicial
 
 typedef struct Arvore{
     int chave;
@@ -117,7 +118,7 @@ int exclusaoTipoZero(int px, no raiz){
                 (*pai).primFilho = filhosPai->proxIrmao;
             }
             else{
-                //Nao � o irmao mais novo
+                //Nao é o irmao mais novo
                 no irmaoNovo = filhosPai;
                 while(filhosPai){
                     //Precisa pegar o irmao anterior
@@ -156,7 +157,7 @@ int exclusaoTipoUm(int px, no raiz){
             (*pai).primFilho = processo->proxIrmao;
         }
         else{
-            //Nao � o filho mais novo
+            //Nao é o filho mais novo
             //Exclui o processo da lista de filhos do pai dele
             no irmaoNovo = filhosPai;
             while(filhosPai){
@@ -207,7 +208,7 @@ int exclusaoTipoDois(int px, no raiz){
             (*avo).primFilho = processo->proxIrmao;
         }
         else{
-            //Nao � o filho mais novo
+            //Nao é o filho mais novo
             no irmaoNovo = aux;
 
             //Exclui o processo da lista de filhos do pai dele
@@ -231,7 +232,7 @@ int exclusaoTipoDois(int px, no raiz){
             }
             aux = aux->proxIrmao;
         }
-        //Como eu faco pra pegar o ultimo processo? Aquele que n�o est� vazio
+        //Como eu faco pra pegar o ultimo processo? Aquele que não está vazio
 
         //Adiciona os processos filhos do processo no avo
         (*aux).proxIrmao = filhos;
@@ -265,7 +266,10 @@ int main(){
     //Raiz da arvore
     no raiz;
     //p - pai, f - filho
-    int p, f, processo, resultado;
+    int pai, filho, processo, resultado;
+    char parametro[6];
+	char p1[6],p2[6];
+	char *token;
 
     //Escolher politica
     escolherPolitica();
@@ -308,11 +312,27 @@ int main(){
             scanf("%d", &opcao);
             switch(opcao){
                 case 1:
-                    printf("\nDigite o pai: ");
-                    scanf("%d", &p);
-                    printf("Digite o filho: ");
-                    scanf("%d", &f);
-                    if((inserirProcesso(p,f,raiz))==0){
+                    printf("Digite as informacoes do processo: ");
+                    //Recebe as informações do processo
+                    scanf("%s", parametro);
+
+                    //Trata o parametro
+                    //Separa a string quando acha o traço
+                    //Pega a primeira parte da string
+                    token = strtok(parametro, "-");
+                    //Passa a string para p1
+                    strcpy(p1,token);
+                    //Pega a partir do segundo caracter da string
+                    strcpy(p1,&p1[1]);
+                    //Pega a segunda parte da string
+                    token = strtok(NULL, " ");
+                    strcpy(p2,token);
+                    strcpy(p2,&p2[1]);
+
+                    pai = atoi(p1);
+                    filho = atoi(p2);
+
+                    if((inserirProcesso(pai,filho,raiz))==0){
                         printf("\nPai escolhido nao existe");
                     }else{
                         printf("Processo adicionado com sucesso!");
@@ -320,8 +340,17 @@ int main(){
                     break;
                 case 2:
                     //Excluir processo
-                    printf("\nDigite o processo que deseja excluir: ");
-                    scanf("%d", &processo);
+
+                    printf("Digite as informacoes do processo: ");
+                    //Recebe as informações do processo
+                    scanf("%s", parametro);
+
+                    //Trata a string
+                    //Pega a partir do segundo caracter da string
+                    strcpy(parametro,&parametro[1]);
+                    //Transforma a string restante em inteiro
+                    processo = atoi(parametro);
+
                     if(processo==0){
                         printf("O processo inicial nao pode ser excluido!\n");
                     }else{
